@@ -1,12 +1,45 @@
 #!ipxe
-###
-### netboot.xyz-custom menu
-###
 
-:start
-echo Hello world!
-sleep 10
+:custom_menu
+clear custom_choice
+menu User menu
+item ldiag_uefi ${space} Lenovo Diagnostics UEFI 4.34
+item hiren_bootcd ${space} Hirens BootCD PE 1.0
+item macrium_reflect ${space} Macrium Reflect 8.0
+choose --default ${menu} menu || goto custom_exit
+echo ${cls}
+goto ${menu} ||
+chain ${menu}.ipxe || goto custom_exit
 goto custom_exit
 
+### Lenovo Diagnostics UEFI
+:ldiag_uefi
+imgfree
+kernel ${live_endpoint}/custom/releases/download/ldiag/4.34.001-uefi-x64/BOOTX64.efi
+boot || goto custom_exit
+
+### Hirens BootCD PE
+:hiren_bootcd
+imgfree
+kernel https://boot.netboot.xyz/wimboot
+initrd -n bootmgr     ${live_endpoint}/custom/releases/download/hbcd/1.0.8/BOOTMGR          bootmgr ||
+initrd -n bootmgr.efi ${live_endpoint}/custom/releases/download/hbcd/1.0.8/bootmgr.efi      bootmgr.efi ||
+initrd -n bcd         ${live_endpoint}/custom/releases/download/hbcd/1.0.8/boot/bcd         bcd ||
+initrd -n boot.sdi    ${live_endpoint}/custom/releases/download/hbcd/1.0.8/boot/boot.sdi    boot.sdi ||
+initrd -n boot.wim    ${live_endpoint}/custom/releases/download/hbcd/1.0.8/sources/boot.wim boot.wim
+boot || goto custom_exit
+
+### Macrium Reflect
+:macrium_reflect
+imgfree
+kernel https://boot.netboot.xyz/wimboot
+initrd -n bootmgr     ${live_endpoint}/custom/releases/download/macrium/8.0.7783/BOOTMGR          bootmgr ||
+initrd -n bootmgr.efi ${live_endpoint}/custom/releases/download/macrium/8.0.7783/bootmgr.efi      bootmgr.efi ||
+initrd -n bcd         ${live_endpoint}/custom/releases/download/macrium/8.0.7783/boot/bcd         bcd ||
+initrd -n boot.sdi    ${live_endpoint}/custom/releases/download/macrium/8.0.7783/boot/boot.sdi    boot.sdi ||
+initrd -n boot.wim    ${live_endpoint}/custom/releases/download/macrium/8.0.7783/sources/boot.wim boot.wim
+boot || goto custom_exit
+
 :custom_exit
+clear menu
 exit 0
