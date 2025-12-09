@@ -12,13 +12,13 @@ goto ${menu} ||
 chain ${menu}.ipxe || goto custom_exit
 goto custom_exit
 
-### Lenovo Diagnostics UEFI
+# Lenovo Diagnostics UEFI
 :ldiag_uefi
 imgfree
 kernel ${live_endpoint}/custom/releases/download/ldiag/4.34.001-uefi-x64/BOOTX64.efi
 boot || goto custom_exit
 
-### Hirens BootCD PE
+# Hirens BootCD PE
 :hiren_bootcd
 imgfree
 kernel https://boot.netboot.xyz/wimboot
@@ -29,7 +29,7 @@ initrd -n boot.sdi    ${live_endpoint}/custom/releases/download/hbcd/1.0.8/boot/
 initrd -n boot.wim    ${live_endpoint}/custom/releases/download/hbcd/1.0.8/sources/boot.wim boot.wim
 boot || goto custom_exit
 
-### Macrium Reflect
+# Macrium Reflect
 :macrium_reflect
 imgfree
 kernel https://boot.netboot.xyz/wimboot
